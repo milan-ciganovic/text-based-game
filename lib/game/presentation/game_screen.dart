@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled1/game/cubit/game_cubit.dart';
 import 'package:untitled1/game/cubit/game_state.dart';
+import 'package:untitled1/game/models/actor.dart';
+import 'package:untitled1/game/models/world_state.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
@@ -12,11 +14,12 @@ class GameScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Text RPG')),
       body: BlocBuilder<GameCubit, GameState>(
         builder: (context, state) {
+          final worldState = state.worldState;
           return Column(
             children: [
-              _PlayerStatus(state),
+              _PlayerStatus(worldState),
               const Divider(height: 1),
-              Expanded(child: _GameLog(state)),
+              Expanded(child: _GameLog(worldState)),
               const Divider(height: 1),
               _ActionBar(state),
             ],
@@ -28,62 +31,176 @@ class GameScreen extends StatelessWidget {
 }
 
 class _PlayerStatus extends StatelessWidget {
-  const _PlayerStatus(this.state);
-  final GameState state;
+  const _PlayerStatus(this.worldState);
+  final WorldState worldState;
 
   @override
   Widget build(BuildContext context) {
-    final player = state.player;
-    final monster = state.currentMonster;
+    final player = worldState.player;
+    final opponent = worldState.getCurrentOpponent();
 
     return Container(
       padding: const EdgeInsets.all(12),
       color: Colors.black12,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(player.name, style: Theme.of(context).textTheme.titleMedium),
-              Text('HP: ${player.health} / ${player.maxHealth}'),
+              _ActorDisplay(actor: player, isPlayer: true),
+              if (opponent != null)
+                _ActorDisplay(actor: opponent, isPlayer: false),
             ],
           ),
-          if (monster != null)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  monster.name,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                Text('HP: ${monster.health}'),
-              ],
-            ),
+          const SizedBox(height: 8),
+          Text(
+            'Turn: ${worldState.turn}',
+            style: const TextStyle(fontSize: 12),
+          ),
         ],
       ),
     );
   }
 }
 
+class _ActorDisplay extends StatelessWidget {
+  const _ActorDisplay({
+    required this.actor,
+    required this.isPlayer,
+  });
+
+  final Actor actor;
+  final bool isPlayer;
+
+  @override
+  Widget build(BuildContext context) {
+    return actor.when(
+      player: (name, health, maxHealth, exp, level) {
+        final percentage = health / maxHealth;
+        final barColor = percentage > 0.5
+            ? Colors.green
+            : percentage > 0.25
+            ? Colors.orange
+            : Colors.red;
+
+        return Expanded(
+          child: Column(
+            crossAxisAlignment: isPlayer
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.end,
+            children: [
+              Text(
+                '$name (Lvl $level)',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('HP: $health / $maxHealth'),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 100,
+                    height: 8,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: percentage,
+                        backgroundColor: Colors.grey[700],
+                        valueColor: AlwaysStoppedAnimation<Color>(barColor),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              if (isPlayer)
+                Text('EXP: $exp', style: const TextStyle(fontSize: 10)),
+            ],
+          ),
+        );
+      },
+      monster: (name, health, maxHealth, exp) {
+        final percentage = health / maxHealth;
+        final barColor = percentage > 0.5
+            ? Colors.green
+            : percentage > 0.25
+            ? Colors.orange
+            : Colors.red;
+
+        return Expanded(
+          child: Column(
+            crossAxisAlignment: isPlayer
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.end,
+            children: [
+              Text(
+                name,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('HP: $health / $maxHealth'),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    width: 100,
+                    height: 8,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: percentage,
+                        backgroundColor: Colors.grey[700],
+                        valueColor: AlwaysStoppedAnimation<Color>(barColor),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+      npc: (name, description) {
+        return Expanded(
+          child: Column(
+            crossAxisAlignment: isPlayer
+                ? CrossAxisAlignment.start
+                : CrossAxisAlignment.end,
+            children: [
+              Text(
+                name,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              Text(
+                description,
+                style: const TextStyle(fontSize: 10),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
 class _GameLog extends StatelessWidget {
-  const _GameLog(this.state);
-  final GameState state;
+  const _GameLog(this.worldState);
+  final WorldState worldState;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       padding: const EdgeInsets.all(12),
-      itemCount: state.log.length,
+      itemCount: worldState.log.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 6),
           child: Text(
-            state.log[index],
+            worldState.log[index],
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         );
       },
+      reverse: true,
     );
   }
 }
@@ -95,7 +212,62 @@ class _ActionBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<GameCubit>();
-    final hasMonster = state.currentMonster != null;
+    final worldState = state.worldState;
+    final isLoading = state.isLoading;
+
+    if (worldState.isGameOver) {
+      return Container(
+        padding: const EdgeInsets.all(12),
+        child: Center(
+          child: Column(
+            children: [
+              Text(
+                worldState.gameOverReason,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: cubit.startGame,
+                child: const Text('Restart Game'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (worldState.isInCombat) {
+      return Container(
+        padding: const EdgeInsets.all(12),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: isLoading ? null : cubit.attack,
+                child: const Text('Attack'),
+              ),
+              ElevatedButton(
+                onPressed: isLoading ? null : cubit.defend,
+                child: const Text('Defend'),
+              ),
+              ElevatedButton(
+                onPressed: isLoading ? null : cubit.flee,
+                child: const Text('Flee'),
+              ),
+              ElevatedButton(
+                onPressed: isLoading ? null : cubit.inspectOpponent,
+                child: const Text('Inspect'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -103,11 +275,13 @@ class _ActionBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton(
-            onPressed: hasMonster ? cubit.attack : null,
-            child: const Text('Attack'),
+            onPressed: isLoading ? null : cubit.rest,
+            child: const Text('Rest'),
           ),
-          const ElevatedButton(onPressed: null, child: Text('Defend')),
-          const ElevatedButton(onPressed: null, child: Text('Flee')),
+          ElevatedButton(
+            onPressed: isLoading ? null : cubit.spawnMonster,
+            child: const Text('Search for Battle'),
+          ),
         ],
       ),
     );

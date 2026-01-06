@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GameState {
 
- Player get player; Monster? get currentMonster; List<String> get log; bool get isGameOver;
+ WorldState get worldState; List<String> get availableActions; bool get isLoading;
 /// Create a copy of GameState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $GameStateCopyWith<GameState> get copyWith => _$GameStateCopyWithImpl<GameState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GameState&&(identical(other.player, player) || other.player == player)&&(identical(other.currentMonster, currentMonster) || other.currentMonster == currentMonster)&&const DeepCollectionEquality().equals(other.log, log)&&(identical(other.isGameOver, isGameOver) || other.isGameOver == isGameOver));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GameState&&(identical(other.worldState, worldState) || other.worldState == worldState)&&const DeepCollectionEquality().equals(other.availableActions, availableActions)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,player,currentMonster,const DeepCollectionEquality().hash(log),isGameOver);
+int get hashCode => Object.hash(runtimeType,worldState,const DeepCollectionEquality().hash(availableActions),isLoading);
 
 @override
 String toString() {
-  return 'GameState(player: $player, currentMonster: $currentMonster, log: $log, isGameOver: $isGameOver)';
+  return 'GameState(worldState: $worldState, availableActions: $availableActions, isLoading: $isLoading)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $GameStateCopyWith<$Res>  {
   factory $GameStateCopyWith(GameState value, $Res Function(GameState) _then) = _$GameStateCopyWithImpl;
 @useResult
 $Res call({
- Player player, Monster? currentMonster, List<String> log, bool isGameOver
+ WorldState worldState, List<String> availableActions, bool isLoading
 });
 
 
-$PlayerCopyWith<$Res> get player;$MonsterCopyWith<$Res>? get currentMonster;
+$WorldStateCopyWith<$Res> get worldState;
 
 }
 /// @nodoc
@@ -62,12 +62,11 @@ class _$GameStateCopyWithImpl<$Res>
 
 /// Create a copy of GameState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? player = null,Object? currentMonster = freezed,Object? log = null,Object? isGameOver = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? worldState = null,Object? availableActions = null,Object? isLoading = null,}) {
   return _then(_self.copyWith(
-player: null == player ? _self.player : player // ignore: cast_nullable_to_non_nullable
-as Player,currentMonster: freezed == currentMonster ? _self.currentMonster : currentMonster // ignore: cast_nullable_to_non_nullable
-as Monster?,log: null == log ? _self.log : log // ignore: cast_nullable_to_non_nullable
-as List<String>,isGameOver: null == isGameOver ? _self.isGameOver : isGameOver // ignore: cast_nullable_to_non_nullable
+worldState: null == worldState ? _self.worldState : worldState // ignore: cast_nullable_to_non_nullable
+as WorldState,availableActions: null == availableActions ? _self.availableActions : availableActions // ignore: cast_nullable_to_non_nullable
+as List<String>,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -75,22 +74,10 @@ as bool,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$PlayerCopyWith<$Res> get player {
+$WorldStateCopyWith<$Res> get worldState {
   
-  return $PlayerCopyWith<$Res>(_self.player, (value) {
-    return _then(_self.copyWith(player: value));
-  });
-}/// Create a copy of GameState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$MonsterCopyWith<$Res>? get currentMonster {
-    if (_self.currentMonster == null) {
-    return null;
-  }
-
-  return $MonsterCopyWith<$Res>(_self.currentMonster!, (value) {
-    return _then(_self.copyWith(currentMonster: value));
+  return $WorldStateCopyWith<$Res>(_self.worldState, (value) {
+    return _then(_self.copyWith(worldState: value));
   });
 }
 }
@@ -171,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Player player,  Monster? currentMonster,  List<String> log,  bool isGameOver)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( WorldState worldState,  List<String> availableActions,  bool isLoading)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GameState() when $default != null:
-return $default(_that.player,_that.currentMonster,_that.log,_that.isGameOver);case _:
+return $default(_that.worldState,_that.availableActions,_that.isLoading);case _:
   return orElse();
 
 }
@@ -192,10 +179,10 @@ return $default(_that.player,_that.currentMonster,_that.log,_that.isGameOver);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Player player,  Monster? currentMonster,  List<String> log,  bool isGameOver)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( WorldState worldState,  List<String> availableActions,  bool isLoading)  $default,) {final _that = this;
 switch (_that) {
 case _GameState():
-return $default(_that.player,_that.currentMonster,_that.log,_that.isGameOver);}
+return $default(_that.worldState,_that.availableActions,_that.isLoading);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -209,10 +196,10 @@ return $default(_that.player,_that.currentMonster,_that.log,_that.isGameOver);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Player player,  Monster? currentMonster,  List<String> log,  bool isGameOver)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( WorldState worldState,  List<String> availableActions,  bool isLoading)?  $default,) {final _that = this;
 switch (_that) {
 case _GameState() when $default != null:
-return $default(_that.player,_that.currentMonster,_that.log,_that.isGameOver);case _:
+return $default(_that.worldState,_that.availableActions,_that.isLoading);case _:
   return null;
 
 }
@@ -224,19 +211,18 @@ return $default(_that.player,_that.currentMonster,_that.log,_that.isGameOver);ca
 
 
 class _GameState implements GameState {
-  const _GameState({required this.player, this.currentMonster, final  List<String> log = const [], this.isGameOver = false}): _log = log;
+  const _GameState({required this.worldState, final  List<String> availableActions = const [], this.isLoading = false}): _availableActions = availableActions;
   
 
-@override final  Player player;
-@override final  Monster? currentMonster;
- final  List<String> _log;
-@override@JsonKey() List<String> get log {
-  if (_log is EqualUnmodifiableListView) return _log;
+@override final  WorldState worldState;
+ final  List<String> _availableActions;
+@override@JsonKey() List<String> get availableActions {
+  if (_availableActions is EqualUnmodifiableListView) return _availableActions;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_log);
+  return EqualUnmodifiableListView(_availableActions);
 }
 
-@override@JsonKey() final  bool isGameOver;
+@override@JsonKey() final  bool isLoading;
 
 /// Create a copy of GameState
 /// with the given fields replaced by the non-null parameter values.
@@ -248,16 +234,16 @@ _$GameStateCopyWith<_GameState> get copyWith => __$GameStateCopyWithImpl<_GameSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GameState&&(identical(other.player, player) || other.player == player)&&(identical(other.currentMonster, currentMonster) || other.currentMonster == currentMonster)&&const DeepCollectionEquality().equals(other._log, _log)&&(identical(other.isGameOver, isGameOver) || other.isGameOver == isGameOver));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GameState&&(identical(other.worldState, worldState) || other.worldState == worldState)&&const DeepCollectionEquality().equals(other._availableActions, _availableActions)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,player,currentMonster,const DeepCollectionEquality().hash(_log),isGameOver);
+int get hashCode => Object.hash(runtimeType,worldState,const DeepCollectionEquality().hash(_availableActions),isLoading);
 
 @override
 String toString() {
-  return 'GameState(player: $player, currentMonster: $currentMonster, log: $log, isGameOver: $isGameOver)';
+  return 'GameState(worldState: $worldState, availableActions: $availableActions, isLoading: $isLoading)';
 }
 
 
@@ -268,11 +254,11 @@ abstract mixin class _$GameStateCopyWith<$Res> implements $GameStateCopyWith<$Re
   factory _$GameStateCopyWith(_GameState value, $Res Function(_GameState) _then) = __$GameStateCopyWithImpl;
 @override @useResult
 $Res call({
- Player player, Monster? currentMonster, List<String> log, bool isGameOver
+ WorldState worldState, List<String> availableActions, bool isLoading
 });
 
 
-@override $PlayerCopyWith<$Res> get player;@override $MonsterCopyWith<$Res>? get currentMonster;
+@override $WorldStateCopyWith<$Res> get worldState;
 
 }
 /// @nodoc
@@ -285,12 +271,11 @@ class __$GameStateCopyWithImpl<$Res>
 
 /// Create a copy of GameState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? player = null,Object? currentMonster = freezed,Object? log = null,Object? isGameOver = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? worldState = null,Object? availableActions = null,Object? isLoading = null,}) {
   return _then(_GameState(
-player: null == player ? _self.player : player // ignore: cast_nullable_to_non_nullable
-as Player,currentMonster: freezed == currentMonster ? _self.currentMonster : currentMonster // ignore: cast_nullable_to_non_nullable
-as Monster?,log: null == log ? _self._log : log // ignore: cast_nullable_to_non_nullable
-as List<String>,isGameOver: null == isGameOver ? _self.isGameOver : isGameOver // ignore: cast_nullable_to_non_nullable
+worldState: null == worldState ? _self.worldState : worldState // ignore: cast_nullable_to_non_nullable
+as WorldState,availableActions: null == availableActions ? _self._availableActions : availableActions // ignore: cast_nullable_to_non_nullable
+as List<String>,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -299,22 +284,10 @@ as bool,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$PlayerCopyWith<$Res> get player {
+$WorldStateCopyWith<$Res> get worldState {
   
-  return $PlayerCopyWith<$Res>(_self.player, (value) {
-    return _then(_self.copyWith(player: value));
-  });
-}/// Create a copy of GameState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$MonsterCopyWith<$Res>? get currentMonster {
-    if (_self.currentMonster == null) {
-    return null;
-  }
-
-  return $MonsterCopyWith<$Res>(_self.currentMonster!, (value) {
-    return _then(_self.copyWith(currentMonster: value));
+  return $WorldStateCopyWith<$Res>(_self.worldState, (value) {
+    return _then(_self.copyWith(worldState: value));
   });
 }
 }
