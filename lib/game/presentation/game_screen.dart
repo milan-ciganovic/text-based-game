@@ -28,9 +28,8 @@ class GameScreen extends StatelessWidget {
 }
 
 class _PlayerStatus extends StatelessWidget {
-  final GameState state;
-
   const _PlayerStatus(this.state);
+  final GameState state;
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +67,8 @@ class _PlayerStatus extends StatelessWidget {
 }
 
 class _GameLog extends StatelessWidget {
-  final GameState state;
-
   const _GameLog(this.state);
+  final GameState state;
 
   @override
   Widget build(BuildContext context) {
@@ -91,9 +89,8 @@ class _GameLog extends StatelessWidget {
 }
 
 class _ActionBar extends StatelessWidget {
-  final GameState state;
-
   const _ActionBar(this.state);
+  final GameState state;
 
   @override
   Widget build(BuildContext context) {
@@ -109,8 +106,8 @@ class _ActionBar extends StatelessWidget {
             onPressed: hasMonster ? cubit.attack : null,
             child: const Text('Attack'),
           ),
-          ElevatedButton(onPressed: null, child: const Text('Defend')),
-          ElevatedButton(onPressed: null, child: const Text('Flee')),
+          const ElevatedButton(onPressed: null, child: Text('Defend')),
+          const ElevatedButton(onPressed: null, child: Text('Flee')),
         ],
       ),
     );

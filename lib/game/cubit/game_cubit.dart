@@ -1,14 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:untitled1/game/cubit/game_state.dart';
+import 'package:untitled1/game/data/monster_repository.dart';
 import 'package:untitled1/game/models/player.dart' show Player;
-
-import '../data/monster_repository.dart';
-import 'game_state.dart';
 
 @injectable
 class GameCubit extends Cubit<GameState> {
   GameCubit()
-    : super(GameState(player: Player(name: 'Hero', health: 20, maxHealth: 20)));
+    : super(
+        const GameState(
+          player: Player(name: 'Hero', health: 20, maxHealth: 20),
+        ),
+      );
 
   void startGame() {
     emit(state.copyWith(log: ['You beg in your journey...']));
