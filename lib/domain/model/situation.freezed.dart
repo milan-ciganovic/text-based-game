@@ -55,10 +55,10 @@ extension SituationPatterns on Situation {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( CombatSituation value)?  combat,TResult Function( _ExplorationSituation value)?  exploration,TResult Function( _RestSituation value)?  rest,TResult Function( _DialogueSituation value)?  dialogue,TResult Function( _CustomSituation value)?  custom,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _CombatSituation value)?  combat,TResult Function( _ExplorationSituation value)?  exploration,TResult Function( _RestSituation value)?  rest,TResult Function( _DialogueSituation value)?  dialogue,TResult Function( _CustomSituation value)?  custom,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case CombatSituation() when combat != null:
+case _CombatSituation() when combat != null:
 return combat(_that);case _ExplorationSituation() when exploration != null:
 return exploration(_that);case _RestSituation() when rest != null:
 return rest(_that);case _DialogueSituation() when dialogue != null:
@@ -81,10 +81,10 @@ return custom(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( CombatSituation value)  combat,required TResult Function( _ExplorationSituation value)  exploration,required TResult Function( _RestSituation value)  rest,required TResult Function( _DialogueSituation value)  dialogue,required TResult Function( _CustomSituation value)  custom,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _CombatSituation value)  combat,required TResult Function( _ExplorationSituation value)  exploration,required TResult Function( _RestSituation value)  rest,required TResult Function( _DialogueSituation value)  dialogue,required TResult Function( _CustomSituation value)  custom,}){
 final _that = this;
 switch (_that) {
-case CombatSituation():
+case _CombatSituation():
 return combat(_that);case _ExplorationSituation():
 return exploration(_that);case _RestSituation():
 return rest(_that);case _DialogueSituation():
@@ -103,10 +103,10 @@ return custom(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( CombatSituation value)?  combat,TResult? Function( _ExplorationSituation value)?  exploration,TResult? Function( _RestSituation value)?  rest,TResult? Function( _DialogueSituation value)?  dialogue,TResult? Function( _CustomSituation value)?  custom,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _CombatSituation value)?  combat,TResult? Function( _ExplorationSituation value)?  exploration,TResult? Function( _RestSituation value)?  rest,TResult? Function( _DialogueSituation value)?  dialogue,TResult? Function( _CustomSituation value)?  custom,}){
 final _that = this;
 switch (_that) {
-case CombatSituation() when combat != null:
+case _CombatSituation() when combat != null:
 return combat(_that);case _ExplorationSituation() when exploration != null:
 return exploration(_that);case _RestSituation() when rest != null:
 return rest(_that);case _DialogueSituation() when dialogue != null:
@@ -130,7 +130,7 @@ return custom(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String monsterName,  String description)?  combat,TResult Function( String locationName,  String description,  List<String> availableDirections)?  exploration,TResult Function( String description)?  rest,TResult Function( String npcName,  String dialogueText)?  dialogue,TResult Function( String name,  String description)?  custom,required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case CombatSituation() when combat != null:
+case _CombatSituation() when combat != null:
 return combat(_that.monsterName,_that.description);case _ExplorationSituation() when exploration != null:
 return exploration(_that.locationName,_that.description,_that.availableDirections);case _RestSituation() when rest != null:
 return rest(_that.description);case _DialogueSituation() when dialogue != null:
@@ -155,7 +155,7 @@ return custom(_that.name,_that.description);case _:
 
 @optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String monsterName,  String description)  combat,required TResult Function( String locationName,  String description,  List<String> availableDirections)  exploration,required TResult Function( String description)  rest,required TResult Function( String npcName,  String dialogueText)  dialogue,required TResult Function( String name,  String description)  custom,}) {final _that = this;
 switch (_that) {
-case CombatSituation():
+case _CombatSituation():
 return combat(_that.monsterName,_that.description);case _ExplorationSituation():
 return exploration(_that.locationName,_that.description,_that.availableDirections);case _RestSituation():
 return rest(_that.description);case _DialogueSituation():
@@ -176,7 +176,7 @@ return custom(_that.name,_that.description);}
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String monsterName,  String description)?  combat,TResult? Function( String locationName,  String description,  List<String> availableDirections)?  exploration,TResult? Function( String description)?  rest,TResult? Function( String npcName,  String dialogueText)?  dialogue,TResult? Function( String name,  String description)?  custom,}) {final _that = this;
 switch (_that) {
-case CombatSituation() when combat != null:
+case _CombatSituation() when combat != null:
 return combat(_that.monsterName,_that.description);case _ExplorationSituation() when exploration != null:
 return exploration(_that.locationName,_that.description,_that.availableDirections);case _RestSituation() when rest != null:
 return rest(_that.description);case _DialogueSituation() when dialogue != null:
@@ -192,8 +192,8 @@ return custom(_that.name,_that.description);case _:
 /// @nodoc
 
 
-class CombatSituation extends Situation {
-  const CombatSituation({required this.monsterName, this.description = 'A wild enemy appears!'}): super._();
+class _CombatSituation extends Situation {
+  const _CombatSituation({required this.monsterName, this.description = 'A wild enemy appears!'}): super._();
   
 
  final  String monsterName;
@@ -203,13 +203,13 @@ class CombatSituation extends Situation {
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$CombatSituationCopyWith<CombatSituation> get copyWith => _$CombatSituationCopyWithImpl<CombatSituation>(this, _$identity);
+_$CombatSituationCopyWith<_CombatSituation> get copyWith => __$CombatSituationCopyWithImpl<_CombatSituation>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CombatSituation&&(identical(other.monsterName, monsterName) || other.monsterName == monsterName)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CombatSituation&&(identical(other.monsterName, monsterName) || other.monsterName == monsterName)&&(identical(other.description, description) || other.description == description));
 }
 
 
@@ -225,8 +225,8 @@ String toString() {
 }
 
 /// @nodoc
-abstract mixin class $CombatSituationCopyWith<$Res> implements $SituationCopyWith<$Res> {
-  factory $CombatSituationCopyWith(CombatSituation value, $Res Function(CombatSituation) _then) = _$CombatSituationCopyWithImpl;
+abstract mixin class _$CombatSituationCopyWith<$Res> implements $SituationCopyWith<$Res> {
+  factory _$CombatSituationCopyWith(_CombatSituation value, $Res Function(_CombatSituation) _then) = __$CombatSituationCopyWithImpl;
 @useResult
 $Res call({
  String monsterName, String description
@@ -237,17 +237,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$CombatSituationCopyWithImpl<$Res>
-    implements $CombatSituationCopyWith<$Res> {
-  _$CombatSituationCopyWithImpl(this._self, this._then);
+class __$CombatSituationCopyWithImpl<$Res>
+    implements _$CombatSituationCopyWith<$Res> {
+  __$CombatSituationCopyWithImpl(this._self, this._then);
 
-  final CombatSituation _self;
-  final $Res Function(CombatSituation) _then;
+  final _CombatSituation _self;
+  final $Res Function(_CombatSituation) _then;
 
 /// Create a copy of Situation
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? monsterName = null,Object? description = null,}) {
-  return _then(CombatSituation(
+  return _then(_CombatSituation(
 monsterName: null == monsterName ? _self.monsterName : monsterName // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,

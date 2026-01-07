@@ -8,7 +8,7 @@ sealed class Situation with _$Situation {
   const factory Situation.combat({
     required String monsterName,
     @Default('A wild enemy appears!') String description,
-  }) = CombatSituation;
+  }) = _CombatSituation;
 
   const factory Situation.exploration({
     required String locationName,

@@ -1,14 +1,11 @@
 import 'package:injectable/injectable.dart';
-import 'package:untitled1/domain/model/action.dart';
 import 'package:untitled1/domain/model/actor.dart';
 import 'package:untitled1/domain/model/game_model.dart';
-import 'package:untitled1/domain/usecase/action_use_case.dart';
 import 'package:untitled1/service/engine_state.dart';
 
 @injectable
-class RestUseCase implements ActionUseCase {
-  @override
-  Future<GameResult?> call(Action action, EngineState s) async {
+class RestUseCase {
+  Future<GameResult?> call(EngineState s) async {
     final healthGain = (s.player.isPlayer ? s.player.maxHealth ~/ 4 : 0);
     s.player = s.player.when(
       player:

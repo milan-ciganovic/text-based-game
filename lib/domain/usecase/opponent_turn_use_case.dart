@@ -1,19 +1,19 @@
 import 'package:injectable/injectable.dart';
 import 'package:untitled1/domain/model/actor.dart';
-import 'package:untitled1/domain/model/situation.dart';
+import 'package:untitled1/domain/model/world_state.dart';
 import 'package:untitled1/service/engine_state.dart';
 
 @injectable
 class OpponentTurnUseCase {
   Future<void> call(EngineState s) async {
-    String? opponentName;
-    final cs = s.currentSituation;
+    // Reuse WorldState helper to get the current opponent to avoid duplicated logic
+    final world = WorldState(
+      player: s.player,
+      actors: s.actors,
+      currentSituation: s.currentSituation,
+    );
 
-    if (cs is CombatSituation) {
-      opponentName = cs.monsterName;
-    }
-
-    final opponent = opponentName != null ? s.actors[opponentName] : null;
+    final opponent = world.getCurrentOpponent();
     if (opponent == null || !opponent.isAlive) return;
 
     final baseDamage = _calculateMonsterDamage(opponent);

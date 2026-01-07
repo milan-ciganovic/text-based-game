@@ -1,14 +1,11 @@
 import 'package:injectable/injectable.dart';
-import 'package:untitled1/domain/model/action.dart';
 import 'package:untitled1/domain/model/actor.dart';
 import 'package:untitled1/domain/model/game_model.dart';
-import 'package:untitled1/domain/usecase/action_use_case.dart';
 import 'package:untitled1/service/engine_state.dart';
 
 @injectable
-class DefendUseCase implements ActionUseCase {
-  @override
-  Future<GameResult?> call(Action action, EngineState state) async {
+class DefendUseCase {
+  Future<GameResult?> call(EngineState state) async {
     state.player = state.player.when(
       player:
           (
@@ -30,9 +27,8 @@ class DefendUseCase implements ActionUseCase {
             isDefending: true,
             currentLocation: currentLocation,
           ),
-      monster: (String name, int health, int maxHealth, int exp) =>
-          state.player,
-      npc: (String name, String description) => state.player,
+      monster: (_, _, _, _) => state.player,
+      npc: (_, _) => state.player,
     );
     state.logs.add('You take a defensive stance.');
     return null;

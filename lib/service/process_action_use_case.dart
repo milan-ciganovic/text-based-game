@@ -40,11 +40,11 @@ class ProcessActionUseCase {
 
     await action.when(
       attack: (_, _) => _attack(action, engineState),
-      defend: () => _defend(action, engineState),
+      defend: () => _defend(engineState),
       flee: () => _flee(engineState),
       useItem: (itemName, _) => _handleUseItem(engineState, itemName),
-      talk: (npcName) async => _handleTalk(engineState, npcName),
-      rest: () => _rest(action, engineState),
+      talk: (npcName) => _handleTalk(engineState, npcName),
+      rest: () => _rest(engineState),
       inspect: (_) => _inspect(action, engineState),
     );
 
