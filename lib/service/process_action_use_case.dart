@@ -1,16 +1,15 @@
 import 'package:injectable/injectable.dart';
 import 'package:untitled1/domain/model/action.dart';
-import 'package:untitled1/domain/model/actor.dart';
-import 'package:untitled1/domain/model/game_model.dart';
+import 'package:untitled1/domain/model/world_state.dart';
+import 'package:untitled1/domain/model/world_state_extensions.dart';
 import 'package:untitled1/domain/usecase/attack_use_case.dart';
 import 'package:untitled1/domain/usecase/defend_use_case.dart';
 import 'package:untitled1/domain/usecase/flee_use_case.dart';
 import 'package:untitled1/domain/usecase/inspect_use_case.dart';
 import 'package:untitled1/domain/usecase/opponent_turn_use_case.dart';
 import 'package:untitled1/domain/usecase/rest_use_case.dart';
-import 'package:untitled1/service/engine_state.dart';
 
-/// Main use-case that processes actions and returns a GameResult
+/// Main coordinator that processes actions and returns updated world state
 @injectable
 class ProcessActionUseCase {
   const ProcessActionUseCase(
@@ -29,49 +28,27 @@ class ProcessActionUseCase {
   final InspectUseCase _inspect;
   final OpponentTurnUseCase _opponentTurn;
 
-  /// Use-case entry point: call processes an action and returns the result DTO
-  Future<GameResult> call(GameRequest request, Action action) async {
-    final engineState = EngineState(
-      player: request.player,
-      actors: Map<String, Actor>.from(request.actors),
-      currentSituation: request.currentSituation,
-      logs: <String>[],
+  /// Process an action and return the updated world state
+  Future<WorldState> call(WorldState world, Action action) async {
+    // Process player action
+    var updatedWorld = await action.when(
+      attack: (_, _) => _attack(world, action),
+      defend: () => _defend(world),
+      flee: () => _flee(world),
+      useItem: (itemName, _) => Future.value(
+        world.withLog('You used $itemName.'),
+      ),
+      talk: (npcName) => Future.value(
+        world.withLog('You talked to $npcName.'),
+      ),
+      rest: () => _rest(world),
+      inspect: (_) => _inspect(world, action),
     );
 
-    await action.when(
-      attack: (_, _) => _attack(action, engineState),
-      defend: () => _defend(engineState),
-      flee: () => _flee(engineState),
-      useItem: (itemName, _) => _handleUseItem(engineState, itemName),
-      talk: (npcName) => _handleTalk(engineState, npcName),
-      rest: () => _rest(engineState),
-      inspect: (_) => _inspect(action, engineState),
-    );
+    // Process opponent turn if still in combat
+    updatedWorld = await _opponentTurn(updatedWorld);
 
-    // Opponent turn if in combat (delegated)
-    await _opponentTurn(engineState);
-
-    // Build result
-    final result = GameResult(
-      player: engineState.player,
-      actors: engineState.actors,
-      currentSituation: engineState.currentSituation,
-      newTurn: request.turn + 1,
-      logs: engineState.logs,
-      isGameOver: !engineState.player.isAlive,
-      gameOverReason: !engineState.player.isAlive
-          ? 'You have been defeated!'
-          : '',
-    );
-
-    return result;
-  }
-
-  Future<void> _handleUseItem(EngineState s, String itemName) async {
-    s.logs.add('You used $itemName.');
-  }
-
-  Future<void> _handleTalk(EngineState s, String npcName) async {
-    s.logs.add('You talked to $npcName.');
+    // Advance turn and return
+    return updatedWorld.nextTurn();
   }
 }

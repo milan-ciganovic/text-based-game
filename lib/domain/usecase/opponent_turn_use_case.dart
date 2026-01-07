@@ -1,26 +1,21 @@
 import 'package:injectable/injectable.dart';
 import 'package:untitled1/domain/model/actor.dart';
 import 'package:untitled1/domain/model/world_state.dart';
-import 'package:untitled1/service/engine_state.dart';
+import 'package:untitled1/domain/model/world_state_extensions.dart';
 
 @injectable
 class OpponentTurnUseCase {
-  Future<void> call(EngineState s) async {
-    // Reuse WorldState helper to get the current opponent to avoid duplicated logic
-    final world = WorldState(
-      player: s.player,
-      actors: s.actors,
-      currentSituation: s.currentSituation,
-    );
-
-    final opponent = world.getCurrentOpponent();
-    if (opponent == null || !opponent.isAlive) return;
+  /// Process opponent's turn: attack player if in combat
+  Future<WorldState> call(WorldState world) async {
+    final opponent = world.currentOpponent;
+    if (opponent == null || !opponent.isAlive) {
+      return world;
+    }
 
     final baseDamage = _calculateMonsterDamage(opponent);
-    final damage = s.player.isDefending ? (baseDamage ~/ 2) : baseDamage;
-    s.logs.add('The ${opponent.displayName} attacks for $damage damage!');
+    final damage = world.player.isDefending ? (baseDamage ~/ 2) : baseDamage;
 
-    s.player = s.player.when(
+    final damagedPlayer = world.player.when(
       player:
           (
             String name,
@@ -38,17 +33,22 @@ class OpponentTurnUseCase {
             experience: exp,
             level: level,
             gold: gold,
-            isDefending: false,
+            isDefending: false, // Reset defending after being attacked
             currentLocation: currentLocation,
           ),
-      monster: (_, _, _, _) => s.player,
-      npc: (_, _) => s.player,
+      monster: (_, _, _, _) => world.player,
+      npc: (_, _) => world.player,
     );
 
-    if (!s.player.isAlive) {
-      s.logs.add('You have been defeated!');
-    }
-    return;
+    return world
+        .withLog('The ${opponent.displayName} attacks for $damage damage!')
+        .withPlayer(damagedPlayer)
+        .applyIf(
+          !damagedPlayer.isAlive,
+          (w) => w
+              .withLog('You have been defeated!')
+              .gameOver('Defeated by ${opponent.displayName}'),
+        );
   }
 
   int _calculateMonsterDamage(Actor opponent) {

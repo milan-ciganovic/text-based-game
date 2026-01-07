@@ -1,12 +1,13 @@
 import 'package:injectable/injectable.dart';
 import 'package:untitled1/domain/model/actor.dart';
-import 'package:untitled1/domain/model/game_model.dart';
-import 'package:untitled1/service/engine_state.dart';
+import 'package:untitled1/domain/model/world_state.dart';
+import 'package:untitled1/domain/model/world_state_extensions.dart';
 
 @injectable
 class DefendUseCase {
-  Future<GameResult?> call(EngineState state) async {
-    state.player = state.player.when(
+  /// Defend action: player takes a defensive stance
+  Future<WorldState> call(WorldState world) async {
+    final defendingPlayer = world.player.when(
       player:
           (
             String name,
@@ -27,10 +28,12 @@ class DefendUseCase {
             isDefending: true,
             currentLocation: currentLocation,
           ),
-      monster: (_, _, _, _) => state.player,
-      npc: (_, _) => state.player,
+      monster: (_, _, _, _) => world.player,
+      npc: (_, _) => world.player,
     );
-    state.logs.add('You take a defensive stance.');
-    return null;
+
+    return world
+        .withPlayer(defendingPlayer)
+        .withLog('You take a defensive stance.');
   }
 }

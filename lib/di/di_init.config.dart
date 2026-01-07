@@ -12,6 +12,7 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
+import '../domain/model/MIGRATION_GUIDE.dart' as _i372;
 import '../domain/repository/monster_repository.dart' as _i344;
 import '../domain/usecase/attack_use_case.dart' as _i479;
 import '../domain/usecase/defend_use_case.dart' as _i967;
@@ -29,6 +30,8 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    gh.factory<_i372.ExampleRestUseCase>(() => _i372.ExampleRestUseCase());
+    gh.factory<_i372.ExampleAttackUseCase>(() => _i372.ExampleAttackUseCase());
     gh.factory<_i479.AttackUseCase>(() => _i479.AttackUseCase());
     gh.factory<_i967.DefendUseCase>(() => _i967.DefendUseCase());
     gh.factory<_i34.FleeUseCase>(() => _i34.FleeUseCase());

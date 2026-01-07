@@ -228,8 +228,8 @@ return $default(_that.player,_that.actors,_that.currentSituation,_that.log,_that
 /// @nodoc
 
 
-class _WorldState extends WorldState {
-  const _WorldState({required this.player, final  Map<String, Actor> actors = const <String, Actor>{}, this.currentSituation, final  List<String> log = const <String>[], this.turn = 0, this.isGameOver = false, this.gameOverReason = ''}): _actors = actors,_log = log,super._();
+class _WorldState implements WorldState {
+  const _WorldState({required this.player, final  Map<String, Actor> actors = const <String, Actor>{}, this.currentSituation, final  List<String> log = const <String>[], this.turn = 0, this.isGameOver = false, this.gameOverReason = ''}): _actors = actors,_log = log;
   
 
 @override final  Actor player;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled1/domain/model/actor.dart';
 import 'package:untitled1/domain/model/world_state.dart';
+import 'package:untitled1/domain/model/world_state_extensions.dart';
 import 'package:untitled1/presentation/bloc/game_bloc.dart';
 
 class GameScreen extends StatelessWidget {
@@ -36,7 +37,7 @@ class _PlayerStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final player = worldState.player;
-    final opponent = worldState.getCurrentOpponent();
+    final opponent = worldState.currentOpponent;
 
     return Container(
       padding: const EdgeInsets.all(12),

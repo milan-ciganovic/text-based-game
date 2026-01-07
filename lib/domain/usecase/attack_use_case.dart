@@ -1,92 +1,79 @@
 import 'package:injectable/injectable.dart';
 import 'package:untitled1/domain/model/action.dart';
 import 'package:untitled1/domain/model/actor.dart';
-import 'package:untitled1/domain/model/game_model.dart';
-import 'package:untitled1/domain/model/situation.dart';
-import 'package:untitled1/domain/usecase/action_use_case.dart';
-import 'package:untitled1/service/engine_state.dart';
+import 'package:untitled1/domain/model/world_state.dart';
+import 'package:untitled1/domain/model/world_state_extensions.dart';
 
 @injectable
-class AttackUseCase implements ActionUseCase {
-  @override
-  Future<GameResult?> call(Action action, EngineState state) async {
-    await action.when(
-      attack: (targetName, customDamage) async {
-        final opponent = _getCurrentOpponent(state);
-        if (opponent == null) {
-          state.logs.add('No opponent to attack!');
-          return null;
-        }
+class AttackUseCase {
+  /// Attack action: damage opponent and handle combat resolution
+  Future<WorldState> call(WorldState world, Action action) async {
+    int? customDamage;
 
-        final damage = customDamage ?? _calculateDamage(state.player);
-        state.logs.add(
-          'You strike the ${opponent.displayName} for $damage damage!',
-        );
+    action.maybeWhen(
+      attack: (_, damage) => customDamage = damage,
+      orElse: () {},
+    );
 
-        final updatedOpponent = opponent.when(
-          player:
-              (
-                name,
-                health,
-                maxHealth,
-                exp,
-                level,
-                gold,
-                isDefending,
-                currentLocation,
-              ) => Actor.player(
-                name: name,
-                health: health - damage,
-                maxHealth: maxHealth,
-                experience: exp,
-                level: level,
-                gold: gold,
-                isDefending: isDefending,
-                currentLocation: currentLocation,
-              ),
-          monster: (name, health, maxHealth, exp) => Actor.monster(
+    final opponent = world.currentOpponent;
+    if (opponent == null) {
+      return world.withLog('No opponent to attack!');
+    }
+
+    final damage = customDamage ?? _calculateDamage(world.player);
+
+    final damagedOpponent = opponent.when(
+      player:
+          (
+            name,
+            health,
+            maxHealth,
+            exp,
+            level,
+            gold,
+            isDefending,
+            currentLocation,
+          ) => Actor.player(
             name: name,
             health: health - damage,
             maxHealth: maxHealth,
             experience: exp,
+            level: level,
+            gold: gold,
+            isDefending: isDefending,
+            currentLocation: currentLocation,
           ),
-          npc: (name, description) =>
-              Actor.npc(name: name, description: description),
-        );
-
-        state.updateActor(opponent.displayName, updatedOpponent);
-
-        if (!updatedOpponent.isAlive) {
-          state.logs.add('The ${opponent.displayName} is defeated!');
-          final expGain = opponent.experienceReward;
-          if (expGain > 0) {
-            state.logs.add('You gain $expGain experience!');
-            state.player = _awardExperienceToPlayer(state.player, expGain);
-          }
-
-          state.currentSituation = null;
-        }
-
-        return null;
-      },
-      defend: () async => null,
-      flee: () async => null,
-      useItem: (_, _) async => null,
-      talk: (_) async => null,
-      rest: () async => null,
-      inspect: (_) async => null,
+      monster: (name, health, maxHealth, exp) => Actor.monster(
+        name: name,
+        health: health - damage,
+        maxHealth: maxHealth,
+        experience: exp,
+      ),
+      npc: (name, description) =>
+          Actor.npc(name: name, description: description),
     );
 
-    return null;
-  }
+    // Start with attack log and update opponent
+    var result = world
+        .withLog('You strike the ${opponent.displayName} for $damage damage!')
+        .withActor(opponent.displayName, damagedOpponent);
 
-  // helpers moved from ProcessActionUseCase
-  Actor? _getCurrentOpponent(EngineState s) {
-    final monsterName = s.currentSituation?.whenOrNull(
-      combat: (String monsterName, String _) => monsterName,
-    );
-    if (monsterName == null) return null;
-    return s.actors[monsterName];
+    // Handle defeated opponent with chaining
+    if (!damagedOpponent.isAlive) {
+      result = result.withLog('The ${opponent.displayName} is defeated!');
+
+      final expGain = opponent.experienceReward;
+      if (expGain > 0) {
+        final leveledPlayer = _awardExperienceToPlayer(result.player, expGain);
+        result = result
+            .withLog('You gain $expGain experience!')
+            .withPlayer(leveledPlayer);
+      }
+
+      result = result.endCombat();
+    }
+
+    return result;
   }
 
   int _calculateDamage(Actor actor) {

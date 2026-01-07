@@ -1,23 +1,28 @@
 import 'package:injectable/injectable.dart';
 import 'package:untitled1/domain/model/action.dart';
 import 'package:untitled1/domain/model/actor.dart';
-import 'package:untitled1/domain/model/game_model.dart';
-import 'package:untitled1/domain/usecase/action_use_case.dart';
-import 'package:untitled1/service/engine_state.dart';
+import 'package:untitled1/domain/model/world_state.dart';
+import 'package:untitled1/domain/model/world_state_extensions.dart';
 
 @injectable
-class InspectUseCase implements ActionUseCase {
-  @override
-  Future<GameResult?> call(Action action, EngineState s) async {
+class InspectUseCase {
+  /// Inspect action: examine an actor and display their stats
+  Future<WorldState> call(WorldState world, Action action) async {
+    String? targetName;
+
     action.maybeWhen(
-      inspect: (String targetName) {
-        final target = s.actors[targetName] ?? s.player;
-        s.logs.add(_getActorInspection(target));
-      },
+      inspect: (name) => targetName = name,
       orElse: () {},
     );
 
-    return null;
+    if (targetName == null) {
+      return world.withLog('Nothing to inspect.');
+    }
+
+    final target = world.actors[targetName] ?? world.player;
+    final inspection = _getActorInspection(target);
+
+    return world.withLog(inspection);
   }
 
   String _getActorInspection(Actor actor) {

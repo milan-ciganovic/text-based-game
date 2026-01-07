@@ -1,31 +1,19 @@
 import 'package:injectable/injectable.dart';
-import 'package:untitled1/domain/model/situation.dart';
-import 'package:untitled1/service/engine_state.dart';
+import 'package:untitled1/domain/model/world_state.dart';
+import 'package:untitled1/domain/model/world_state_extensions.dart';
 
 @injectable
 class FleeUseCase {
-  Future<void> call(EngineState s) async {
-    final isInCombat =
-        s.currentSituation?.maybeWhen(
-          combat: (_, _) => true,
-          orElse: () => false,
-        ) ??
-        false;
-
-    if (!isInCombat) {
-      s.logs.add('You are not in combat!');
-      return;
+  /// Flee action: attempt to escape from combat
+  Future<WorldState> call(WorldState world) async {
+    if (!world.isInCombat) {
+      return world.withLog('You are not in combat!');
     }
 
     final hasFledSuccessfully = DateTime.now().microsecond.isEven;
 
-    if (hasFledSuccessfully) {
-      s.currentSituation = null;
-      s.logs.add('You flee from combat!');
-    } else {
-      s.logs.add('You fail to escape!');
-    }
-
-    return;
+    return hasFledSuccessfully
+        ? world.endCombat().withLog('You flee from combat!')
+        : world.withLog('You fail to escape!');
   }
 }

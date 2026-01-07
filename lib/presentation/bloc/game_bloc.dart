@@ -5,9 +5,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:untitled1/domain/model/action.dart';
 import 'package:untitled1/domain/model/actor.dart';
-import 'package:untitled1/domain/model/game_model.dart';
 import 'package:untitled1/domain/model/situation.dart';
 import 'package:untitled1/domain/model/world_state.dart';
+import 'package:untitled1/domain/model/world_state_extensions.dart';
 import 'package:untitled1/domain/repository/monster_repository.dart';
 import 'package:untitled1/service/process_action_use_case.dart';
 
@@ -29,7 +29,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           ),
         ),
       ) {
-    // Use an inline handler for the Freezed-based GameEvent union
     on<GameEvent>((event, emit) async {
       await event.when(
         startGame: () async => _handleStartGame(emit),
@@ -55,48 +54,26 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     emit(state.copyWith(isLoading: true));
 
     try {
-      // Build a decoupled request DTO for the use-case
-      final request = GameRequest(
-        player: state.worldState.player,
-        actors: state.worldState.actors,
-        currentSituation: state.worldState.currentSituation,
-        turn: state.worldState.turn,
-      );
-
-      final result = await _processActionUseCase(
-        request,
+      // Process action directly with WorldState - no DTOs needed!
+      final updatedWorld = await _processActionUseCase(
+        state.worldState,
         action,
       );
 
-      // Merge result back into a new WorldState
-      final mergedLogs = [...state.worldState.log, ...result.logs];
-
-      var newWorldState = state.worldState.copyWith(
-        player: result.player,
-        actors: result.actors,
-        currentSituation: result.currentSituation,
-        turn: result.newTurn,
-        log: mergedLogs,
-        isGameOver: result.isGameOver,
-        gameOverReason: result.gameOverReason,
-      );
-
       // Update available actions based on situation
-      final availableActions = _getAvailableActions(newWorldState);
+      final availableActions = _getAvailableActions(updatedWorld);
 
-      // Check for end of combat
-      if (!newWorldState.isInCombat &&
-          state.worldState.isInCombat &&
-          !newWorldState.isGameOver) {
-        // Combat ended, offer to spawn new monster or rest
-        newWorldState = newWorldState.copyWith(
-          log: [...newWorldState.log, '', 'What will you do now?'],
-        );
-      }
+      // Check for end of combat and add helpful message
+      final newWorld = updatedWorld.applyIf(
+        !updatedWorld.isInCombat &&
+            state.worldState.isInCombat &&
+            !updatedWorld.isGameOver,
+        (w) => w.withLogs(['', 'What will you do now?']),
+      );
 
       emit(
         GameState(
-          worldState: newWorldState,
+          worldState: newWorld,
           availableActions: availableActions,
           isLoading: false,
         ),
@@ -104,16 +81,13 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     } catch (e) {
       emit(
         state.copyWith(
-          worldState: state.worldState.copyWith(
-            log: [...state.worldState.log, 'Error: $e'],
-          ),
+          worldState: state.worldState.withLog('Error: $e'),
           isLoading: false,
         ),
       );
     }
   }
 
-  // New private helpers extracted for clarity
   Future<void> _handleDefend(Emitter<GameState> emit) async {
     await _handlePerformAction(const Action.defend(), emit);
   }
@@ -122,32 +96,30 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     await _handlePerformAction(const Action.rest(), emit);
   }
 
-  // Extracted event handlers
   Future<void> _handleStartGame(Emitter<GameState> emit) async {
-    final newWorldState = state.worldState.copyWith(
-      log: [...state.worldState.log, 'You begin your journey...'],
-    );
+    final newWorldState = state.worldState.withLog('You begin your journey...');
     emit(_createGameState(newWorldState));
     add(const GameEvent.spawnMonster());
   }
 
   Future<void> _handleSpawnMonster(Emitter<GameState> emit) async {
     final monster = MonsterRepository.random();
-    var newWorldState = state.worldState.copyWith(
-      actors: {...state.worldState.actors, monster.displayName: monster},
-      currentSituation: Situation.combat(
-        monsterName: monster.displayName,
-        description: 'A wild ${monster.displayName} appears!',
-      ),
-    );
-    newWorldState = newWorldState.copyWith(
-      log: [...newWorldState.log, 'A wild ${monster.displayName} appears!'],
-    );
+
+    final newWorldState = state.worldState
+        .withActor(monster.displayName, monster)
+        .copyWith(
+          currentSituation: Situation.combat(
+            monsterName: monster.displayName,
+            description: 'A wild ${monster.displayName} appears!',
+          ),
+        )
+        .withLog('A wild ${monster.displayName} appears!');
+
     emit(_createGameState(newWorldState));
   }
 
   Future<void> _handleAttack(Emitter<GameState> emit) async {
-    final opponent = state.worldState.getCurrentOpponent();
+    final opponent = state.worldState.currentOpponent;
     final targetName = opponent?.displayName ?? 'opponent';
     await _handlePerformAction(
       Action.attack(targetName: targetName),
@@ -160,7 +132,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   }
 
   Future<void> _handleInspectOpponent(Emitter<GameState> emit) async {
-    final opponent = state.worldState.getCurrentOpponent();
+    final opponent = state.worldState.currentOpponent;
     if (opponent != null) {
       await _handlePerformAction(
         Action.inspect(targetName: opponent.displayName),

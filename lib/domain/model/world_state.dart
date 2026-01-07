@@ -17,28 +17,4 @@ sealed class WorldState with _$WorldState {
     @Default(false) bool isGameOver,
     @Default('') String gameOverReason,
   }) = _WorldState;
-
-  const WorldState._();
-
-  /// Get current opponent in combat
-  Actor? getCurrentOpponent() {
-    // Use the isInCombat helper to early-return when not in combat,
-    // then leverage maybeWhen to safely extract the monster name.
-    if (!isInCombat) return null;
-
-    final monsterName = currentSituation?.maybeWhen(
-      combat: (String monsterName, String _) => monsterName,
-      orElse: () => null,
-    );
-
-    return monsterName != null ? actors[monsterName] : null;
-  }
-
-  /// Check if player is in combat
-  bool get isInCombat =>
-      currentSituation?.maybeWhen(
-        orElse: () => false,
-        combat: (_, _) => true,
-      ) ??
-      false;
 }

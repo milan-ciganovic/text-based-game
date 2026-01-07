@@ -1,13 +1,16 @@
 import 'package:injectable/injectable.dart';
 import 'package:untitled1/domain/model/actor.dart';
-import 'package:untitled1/domain/model/game_model.dart';
-import 'package:untitled1/service/engine_state.dart';
+import 'package:untitled1/domain/model/world_state.dart';
+import 'package:untitled1/domain/model/world_state_extensions.dart';
 
 @injectable
 class RestUseCase {
-  Future<GameResult?> call(EngineState s) async {
-    final healthGain = (s.player.isPlayer ? s.player.maxHealth ~/ 4 : 0);
-    s.player = s.player.when(
+  /// Rest action: player recovers health
+  /// Returns updated world state with healed player and log entry
+  Future<WorldState> call(WorldState world) async {
+    final healthGain = world.player.isPlayer ? world.player.maxHealth ~/ 4 : 0;
+
+    final healedPlayer = world.player.when(
       player:
           (
             String name,
@@ -35,10 +38,12 @@ class RestUseCase {
             maxHealth: maxHealth,
             experience: exp,
           ),
-      npc: (String name, String description) => s.player,
+      npc: (String name, String description) => world.player,
     );
 
-    s.logs.add('You rest and recover $healthGain health.');
-    return null;
+    // Use immutable transformations
+    return world
+        .withPlayer(healedPlayer)
+        .withLog('You rest and recover $healthGain health.');
   }
 }
