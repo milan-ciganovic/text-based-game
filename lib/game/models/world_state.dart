@@ -48,23 +48,3 @@ sealed class WorldState with _$WorldState {
   /// Get a custom variable (typed)
   bool getIsDefending() => variables.isDefending;
 }
-
-extension ActorExtension on Actor {
-  bool get isPlayer => when(
-    player: (_, _, _, _, _) => true,
-    monster: (_, _, _, _) => false,
-    npc: (_, _) => false,
-  );
-
-  bool get isMonster => when(
-    player: (_, _, _, _, _) => false,
-    monster: (_, _, _, _) => true,
-    npc: (_, _) => false,
-  );
-
-  bool get isNPC => when(
-    player: (_, _, _, _, _) => false,
-    monster: (_, _, _, _) => false,
-    npc: (_, _) => true,
-  );
-}

@@ -4,7 +4,6 @@ import 'package:untitled1/game/models/actor.dart';
 import 'package:untitled1/game/models/game_model.dart';
 import 'package:untitled1/game/models/game_variables.dart';
 import 'package:untitled1/game/models/situation.dart';
-import 'package:untitled1/game/models/world_state.dart';
 
 /// Main use-case that processes actions and returns a GameResult
 @injectable
@@ -14,7 +13,6 @@ class ProcessActionUseCase {
     GameRequest request,
     Action action,
   ) async {
-    // Convert request into mutable local representations via internal state
     final engineState = _EngineState(
       player: request.player,
       actors: Map<String, Actor>.from(request.actors),
@@ -23,19 +21,27 @@ class ProcessActionUseCase {
       logs: <String>[],
     );
 
-    // Process action using pattern matching but delegate logic to private handlers
     await action.when(
-      attack: (targetName, customDamage) async =>
-          _handleAttack(engineState, targetName, customDamage),
+      attack: (targetName, customDamage) async => _handleAttack(
+        engineState,
+        targetName,
+        customDamage,
+      ),
       defend: () async => _handleDefend(engineState),
       flee: () async => _handleFlee(engineState),
-      useItem: (itemName, targetName) async =>
-          _handleUseItem(engineState, itemName, targetName),
+      useItem: (itemName, targetName) async => _handleUseItem(
+        engineState,
+        itemName,
+        targetName,
+      ),
       talk: (npcName) async => _handleTalk(engineState, npcName),
       rest: () async => _handleRest(engineState),
       inspect: (targetName) async => _handleInspect(engineState, targetName),
-      custom: (name, parameters) async =>
-          _handleCustomAction(engineState, name, parameters),
+      custom: (name, parameters) async => _handleCustomAction(
+        engineState,
+        name,
+        parameters,
+      ),
     );
 
     // Opponent turn if in combat
