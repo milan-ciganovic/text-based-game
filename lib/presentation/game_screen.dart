@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:untitled1/game/cubit/game_bloc.dart';
-import 'package:untitled1/game/models/actor.dart';
-import 'package:untitled1/game/models/world_state.dart';
+import 'package:untitled1/domain/model/actor.dart';
+import 'package:untitled1/domain/model/world_state.dart';
+import 'package:untitled1/presentation/bloc/game_bloc.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});

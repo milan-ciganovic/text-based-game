@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:untitled1/game/models/actor.dart';
-import 'package:untitled1/game/models/situation.dart';
+import 'package:untitled1/domain/model/actor.dart';
+import 'package:untitled1/domain/model/situation.dart';
 
 part 'world_state.freezed.dart';
 

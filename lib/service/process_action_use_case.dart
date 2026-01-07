@@ -1,14 +1,14 @@
 import 'package:injectable/injectable.dart';
-import 'package:untitled1/game/models/action.dart';
-import 'package:untitled1/game/models/actor.dart';
-import 'package:untitled1/game/models/game_model.dart';
-import 'package:untitled1/game/service/engine_state.dart';
-import 'package:untitled1/game/use_cases/attack_use_case.dart';
-import 'package:untitled1/game/use_cases/defend_use_case.dart';
-import 'package:untitled1/game/use_cases/flee_use_case.dart';
-import 'package:untitled1/game/use_cases/inspect_use_case.dart';
-import 'package:untitled1/game/use_cases/opponent_turn_use_case.dart';
-import 'package:untitled1/game/use_cases/rest_use_case.dart';
+import 'package:untitled1/domain/model/action.dart';
+import 'package:untitled1/domain/model/actor.dart';
+import 'package:untitled1/domain/model/game_model.dart';
+import 'package:untitled1/domain/usecase/attack_use_case.dart';
+import 'package:untitled1/domain/usecase/defend_use_case.dart';
+import 'package:untitled1/domain/usecase/flee_use_case.dart';
+import 'package:untitled1/domain/usecase/inspect_use_case.dart';
+import 'package:untitled1/domain/usecase/opponent_turn_use_case.dart';
+import 'package:untitled1/domain/usecase/rest_use_case.dart';
+import 'package:untitled1/service/engine_state.dart';
 
 /// Main use-case that processes actions and returns a GameResult
 @injectable

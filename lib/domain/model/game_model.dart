@@ -1,5 +1,5 @@
-import 'package:untitled1/game/models/actor.dart';
-import 'package:untitled1/game/models/situation.dart';
+import 'package:untitled1/domain/model/actor.dart';
+import 'package:untitled1/domain/model/situation.dart';
 
 /// Input DTO for the ProcessActionUseCase
 class GameRequest {

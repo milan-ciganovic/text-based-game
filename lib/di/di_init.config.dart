@@ -12,15 +12,15 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
-import '../game/cubit/game_bloc.dart' as _i137;
-import '../game/data/monster_repository.dart' as _i285;
-import '../game/service/process_action_use_case.dart' as _i922;
-import '../game/use_cases/attack_use_case.dart' as _i260;
-import '../game/use_cases/defend_use_case.dart' as _i662;
-import '../game/use_cases/flee_use_case.dart' as _i597;
-import '../game/use_cases/inspect_use_case.dart' as _i696;
-import '../game/use_cases/opponent_turn_use_case.dart' as _i603;
-import '../game/use_cases/rest_use_case.dart' as _i654;
+import '../domain/repository/monster_repository.dart' as _i344;
+import '../domain/usecase/attack_use_case.dart' as _i479;
+import '../domain/usecase/defend_use_case.dart' as _i967;
+import '../domain/usecase/flee_use_case.dart' as _i34;
+import '../domain/usecase/inspect_use_case.dart' as _i216;
+import '../domain/usecase/opponent_turn_use_case.dart' as _i207;
+import '../domain/usecase/rest_use_case.dart' as _i52;
+import '../presentation/bloc/game_bloc.dart' as _i713;
+import '../service/process_action_use_case.dart' as _i84;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -29,25 +29,25 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
-    gh.factory<_i260.AttackUseCase>(() => _i260.AttackUseCase());
-    gh.factory<_i662.DefendUseCase>(() => _i662.DefendUseCase());
-    gh.factory<_i597.FleeUseCase>(() => _i597.FleeUseCase());
-    gh.factory<_i696.InspectUseCase>(() => _i696.InspectUseCase());
-    gh.factory<_i603.OpponentTurnUseCase>(() => _i603.OpponentTurnUseCase());
-    gh.factory<_i654.RestUseCase>(() => _i654.RestUseCase());
-    gh.lazySingleton<_i285.MonsterRepository>(() => _i285.MonsterRepository());
-    gh.factory<_i922.ProcessActionUseCase>(
-      () => _i922.ProcessActionUseCase(
-        gh<_i260.AttackUseCase>(),
-        gh<_i662.DefendUseCase>(),
-        gh<_i597.FleeUseCase>(),
-        gh<_i654.RestUseCase>(),
-        gh<_i696.InspectUseCase>(),
-        gh<_i603.OpponentTurnUseCase>(),
+    gh.factory<_i479.AttackUseCase>(() => _i479.AttackUseCase());
+    gh.factory<_i967.DefendUseCase>(() => _i967.DefendUseCase());
+    gh.factory<_i34.FleeUseCase>(() => _i34.FleeUseCase());
+    gh.factory<_i216.InspectUseCase>(() => _i216.InspectUseCase());
+    gh.factory<_i207.OpponentTurnUseCase>(() => _i207.OpponentTurnUseCase());
+    gh.factory<_i52.RestUseCase>(() => _i52.RestUseCase());
+    gh.lazySingleton<_i344.MonsterRepository>(() => _i344.MonsterRepository());
+    gh.factory<_i84.ProcessActionUseCase>(
+      () => _i84.ProcessActionUseCase(
+        gh<_i479.AttackUseCase>(),
+        gh<_i967.DefendUseCase>(),
+        gh<_i34.FleeUseCase>(),
+        gh<_i52.RestUseCase>(),
+        gh<_i216.InspectUseCase>(),
+        gh<_i207.OpponentTurnUseCase>(),
       ),
     );
-    gh.factory<_i137.GameBloc>(
-      () => _i137.GameBloc(gh<_i922.ProcessActionUseCase>()),
+    gh.factory<_i713.GameBloc>(
+      () => _i713.GameBloc(gh<_i84.ProcessActionUseCase>()),
     );
     return this;
   }

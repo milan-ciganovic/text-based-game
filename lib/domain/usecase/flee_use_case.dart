@@ -1,9 +1,9 @@
 import 'package:injectable/injectable.dart';
-import 'package:untitled1/game/models/action.dart';
-import 'package:untitled1/game/models/game_model.dart';
-import 'package:untitled1/game/models/situation.dart';
-import 'package:untitled1/game/service/engine_state.dart';
-import 'package:untitled1/game/use_cases/action_use_case.dart';
+import 'package:untitled1/domain/model/action.dart';
+import 'package:untitled1/domain/model/game_model.dart';
+import 'package:untitled1/domain/model/situation.dart';
+import 'package:untitled1/domain/usecase/action_use_case.dart';
+import 'package:untitled1/service/engine_state.dart';
 
 @injectable
 class FleeUseCase implements ActionUseCase {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled1/di/di_init.dart';
-import 'package:untitled1/game/cubit/game_bloc.dart';
-import 'package:untitled1/game/game_bloc_observer.dart';
-import 'package:untitled1/game/presentation/game_screen.dart';
+import 'package:untitled1/game_bloc_observer.dart';
+import 'package:untitled1/presentation/bloc/game_bloc.dart';
+import 'package:untitled1/presentation/game_screen.dart';
 
 void main() {
   configureDependencies();

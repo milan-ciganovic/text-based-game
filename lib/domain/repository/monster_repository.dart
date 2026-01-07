@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:injectable/injectable.dart';
-import 'package:untitled1/game/models/actor.dart';
+import 'package:untitled1/domain/model/actor.dart';
 
 @lazySingleton
 class MonsterRepository {

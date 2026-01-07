@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
-import 'package:untitled1/game/models/actor.dart';
-import 'package:untitled1/game/models/situation.dart';
-import 'package:untitled1/game/service/engine_state.dart';
+import 'package:untitled1/domain/model/actor.dart';
+import 'package:untitled1/domain/model/situation.dart';
+import 'package:untitled1/service/engine_state.dart';
 
 @injectable
 class OpponentTurnUseCase {
