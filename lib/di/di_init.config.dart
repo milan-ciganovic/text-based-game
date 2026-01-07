@@ -14,7 +14,7 @@ import 'package:injectable/injectable.dart' as _i526;
 
 import '../game/cubit/game_bloc.dart' as _i137;
 import '../game/data/monster_repository.dart' as _i285;
-import '../game/service/process_action_use_case.dart' as _i404;
+import '../game/service/process_action_use_case.dart' as _i922;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -23,10 +23,10 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
-    gh.factory<_i404.ProcessActionUseCase>(() => _i404.ProcessActionUseCase());
+    gh.factory<_i922.ProcessActionUseCase>(() => _i922.ProcessActionUseCase());
     gh.lazySingleton<_i285.MonsterRepository>(() => _i285.MonsterRepository());
     gh.factory<_i137.GameBloc>(
-      () => _i137.GameBloc(gh<_i404.ProcessActionUseCase>()),
+      () => _i137.GameBloc(gh<_i922.ProcessActionUseCase>()),
     );
     return this;
   }
