@@ -1,7 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:untitled1/game/models/action.dart';
 import 'package:untitled1/game/models/actor.dart';
-import 'package:untitled1/game/models/game_usecase.dart';
+import 'package:untitled1/game/models/game_model.dart';
 import 'package:untitled1/game/models/game_variables.dart';
 import 'package:untitled1/game/models/situation.dart';
 import 'package:untitled1/game/models/world_state.dart';
@@ -66,12 +66,12 @@ class ProcessActionUseCase {
   ) async {
     final opponent = _getCurrentOpponent(s);
     if (opponent == null) {
-      s.addLog('No opponent to attack!');
+      s.logs.add('No opponent to attack!');
       return;
     }
 
     final damage = customDamage ?? _calculateDamage(s.player);
-    s.addLog('You strike the ${opponent.displayName} for $damage damage!');
+    s.logs.add('You strike the ${opponent.displayName} for $damage damage!');
 
     final updatedOpponent = opponent.when(
       player: (name, health, maxHealth, exp, level) => Actor.player(
@@ -94,12 +94,11 @@ class ProcessActionUseCase {
     s.updateActor(opponent.displayName, updatedOpponent);
 
     if (!updatedOpponent.isAlive) {
-      s.addLog('The ${opponent.displayName} is defeated!');
+      s.logs.add('The ${opponent.displayName} is defeated!');
       final expGain = opponent.experienceReward;
       if (expGain > 0) {
-        s
-          ..addLog('You gain $expGain experience!')
-          ..player = _awardExperienceToPlayer(s.player, expGain);
+        s.logs.add('You gain $expGain experience!');
+        s.player = _awardExperienceToPlayer(s.player, expGain);
       }
 
       s.currentSituation = null;
@@ -107,25 +106,23 @@ class ProcessActionUseCase {
   }
 
   Future<void> _handleDefend(_EngineState s) async {
-    s
-      ..variables = s.variables.copyWith(isDefending: true)
-      ..addLog('You take a defensive stance.');
+    s.variables = s.variables.copyWith(isDefending: true);
+    s.logs.add('You take a defensive stance.');
   }
 
   Future<void> _handleFlee(_EngineState s) async {
     final isCombat =
         s.currentSituation?.whenOrNull(combat: (_, _) => true) ?? false;
     if (!isCombat) {
-      s.addLog('You are not in combat!');
+      s.logs.add('You are not in combat!');
       return;
     }
     final success = DateTime.now().microsecond.isEven;
     if (success) {
-      s
-        ..currentSituation = null
-        ..addLog('You flee from combat!');
+      s.currentSituation = null;
+      s.logs.add('You flee from combat!');
     } else {
-      s.addLog('You fail to escape!');
+      s.logs.add('You fail to escape!');
     }
   }
 
@@ -134,38 +131,37 @@ class ProcessActionUseCase {
     String itemName,
     String? targetName,
   ) async {
-    s.addLog('You used $itemName.');
+    s.logs.add('You used $itemName.');
   }
 
   Future<void> _handleTalk(_EngineState s, String npcName) async {
-    s.addLog('You talked to $npcName.');
+    s.logs.add('You talked to $npcName.');
   }
 
   Future<void> _handleRest(_EngineState s) async {
     final healthGain = (s.player.isPlayer ? s.player.maxHealth ~/ 4 : 0);
-    s
-      ..player = s.player.when(
-        player: (name, health, maxHealth, exp, level) => Actor.player(
-          name: name,
-          health: (health + healthGain).clamp(0, maxHealth),
-          maxHealth: maxHealth,
-          experience: exp,
-          level: level,
-        ),
-        monster: (name, health, maxHealth, exp) => Actor.monster(
-          name: name,
-          health: health,
-          maxHealth: maxHealth,
-          experience: exp,
-        ),
-        npc: (name, description) => s.player,
-      )
-      ..addLog('You rest and recover $healthGain health.');
+    s.player = s.player.when(
+      player: (name, health, maxHealth, exp, level) => Actor.player(
+        name: name,
+        health: (health + healthGain).clamp(0, maxHealth),
+        maxHealth: maxHealth,
+        experience: exp,
+        level: level,
+      ),
+      monster: (name, health, maxHealth, exp) => Actor.monster(
+        name: name,
+        health: health,
+        maxHealth: maxHealth,
+        experience: exp,
+      ),
+      npc: (name, description) => s.player,
+    );
+    s.logs.add('You rest and recover $healthGain health.');
   }
 
   Future<void> _handleInspect(_EngineState s, String targetName) async {
     final target = s.actors[targetName] ?? s.player;
-    s.addLog(_getActorInspection(target));
+    s.logs.add(_getActorInspection(target));
   }
 
   Future<void> _handleCustomAction(
@@ -173,7 +169,7 @@ class ProcessActionUseCase {
     String name,
     Map<String, dynamic> parameters,
   ) async {
-    s.addLog('Custom action: $name');
+    s.logs.add('Custom action: $name');
   }
 
   Future<void> _handleOpponentTurn(_EngineState s) async {
@@ -183,8 +179,8 @@ class ProcessActionUseCase {
     // simple delay omitted in use-case
     final baseDamage = _calculateMonsterDamage(opponent);
     final damage = s.variables.isDefending ? (baseDamage ~/ 2) : baseDamage;
+    s.logs.add('The ${opponent.displayName} attacks for $damage damage!');
     s
-      ..addLog('The ${opponent.displayName} attacks for $damage damage!')
       ..player = s.player.when(
         player: (name, health, maxHealth, exp, level) => Actor.player(
           name: name,
@@ -199,7 +195,7 @@ class ProcessActionUseCase {
       ..variables = s.variables.copyWith(isDefending: false);
 
     if (!s.player.isAlive) {
-      s.addLog('You have been defeated!');
+      s.logs.add('You have been defeated!');
     }
   }
 
@@ -288,6 +284,5 @@ class _EngineState {
   GameVariables variables;
   List<String> logs;
 
-  void addLog(String entry) => logs = [...logs, entry];
   void updateActor(String key, Actor actor) => actors[key] = actor;
 }

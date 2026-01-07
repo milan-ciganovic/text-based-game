@@ -40,11 +40,6 @@ sealed class WorldState with _$WorldState {
   /// Check if player is in combat
   bool get isInCombat => currentSituation is CombatSituation;
 
-  /// Add a log entry
-  WorldState addLog(String entry) {
-    return copyWith(log: [...log, entry]);
-  }
-
   /// Set a custom variable (typed)
   WorldState setIsDefending({required bool value}) {
     return copyWith(variables: variables.copyWith(isDefending: value));

@@ -6,7 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:untitled1/game/data/monster_repository.dart';
 import 'package:untitled1/game/models/action.dart';
 import 'package:untitled1/game/models/actor.dart';
-import 'package:untitled1/game/models/game_usecase.dart';
+import 'package:untitled1/game/models/game_model.dart';
 import 'package:untitled1/game/models/situation.dart';
 import 'package:untitled1/game/models/world_state.dart';
 import 'package:untitled1/game/service/process_action_use_case.dart';
@@ -91,8 +91,9 @@ class GameBloc extends Bloc<GameEvent, GameState> {
           state.worldState.isInCombat &&
           !newWorldState.isGameOver) {
         // Combat ended, offer to spawn new monster or rest
-        newWorldState = newWorldState.addLog('');
-        newWorldState = newWorldState.addLog('What will you do now?');
+        newWorldState = newWorldState.copyWith(
+          log: [...newWorldState.log, '', 'What will you do now?'],
+        );
       }
 
       emit(
@@ -105,7 +106,9 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     } catch (e) {
       emit(
         state.copyWith(
-          worldState: state.worldState.addLog('Error: $e'),
+          worldState: state.worldState.copyWith(
+            log: [...state.worldState.log, 'Error: $e'],
+          ),
           isLoading: false,
         ),
       );
@@ -123,8 +126,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
   // Extracted event handlers
   Future<void> _handleStartGame(Emitter<GameState> emit) async {
-    final newWorldState = state.worldState.addLog(
-      'You begin your journey...',
+    final newWorldState = state.worldState.copyWith(
+      log: [...state.worldState.log, 'You begin your journey...'],
     );
     emit(_createGameState(newWorldState));
     add(const GameEvent.spawnMonster());
@@ -139,8 +142,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         description: 'A wild ${monster.displayName} appears!',
       ),
     );
-    newWorldState = newWorldState.addLog(
-      'A wild ${monster.displayName} appears!',
+    newWorldState = newWorldState.copyWith(
+      log: [...newWorldState.log, 'A wild ${monster.displayName} appears!'],
     );
     emit(_createGameState(newWorldState));
   }
