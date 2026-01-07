@@ -55,7 +55,7 @@ extension ActionPatterns on Action {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _AttackAction value)?  attack,TResult Function( _DefendAction value)?  defend,TResult Function( _FleeAction value)?  flee,TResult Function( _UseItemAction value)?  useItem,TResult Function( _TalkAction value)?  talk,TResult Function( _RestAction value)?  rest,TResult Function( _InspectAction value)?  inspect,TResult Function( _CustomAction value)?  custom,required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>({TResult Function( _AttackAction value)?  attack,TResult Function( _DefendAction value)?  defend,TResult Function( _FleeAction value)?  flee,TResult Function( _UseItemAction value)?  useItem,TResult Function( _TalkAction value)?  talk,TResult Function( _RestAction value)?  rest,TResult Function( _InspectAction value)?  inspect,required TResult orElse(),}){
 final _that = this;
 switch (_that) {
 case _AttackAction() when attack != null:
@@ -65,8 +65,7 @@ return flee(_that);case _UseItemAction() when useItem != null:
 return useItem(_that);case _TalkAction() when talk != null:
 return talk(_that);case _RestAction() when rest != null:
 return rest(_that);case _InspectAction() when inspect != null:
-return inspect(_that);case _CustomAction() when custom != null:
-return custom(_that);case _:
+return inspect(_that);case _:
   return orElse();
 
 }
@@ -84,7 +83,7 @@ return custom(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _AttackAction value)  attack,required TResult Function( _DefendAction value)  defend,required TResult Function( _FleeAction value)  flee,required TResult Function( _UseItemAction value)  useItem,required TResult Function( _TalkAction value)  talk,required TResult Function( _RestAction value)  rest,required TResult Function( _InspectAction value)  inspect,required TResult Function( _CustomAction value)  custom,}){
+@optionalTypeArgs TResult map<TResult extends Object?>({required TResult Function( _AttackAction value)  attack,required TResult Function( _DefendAction value)  defend,required TResult Function( _FleeAction value)  flee,required TResult Function( _UseItemAction value)  useItem,required TResult Function( _TalkAction value)  talk,required TResult Function( _RestAction value)  rest,required TResult Function( _InspectAction value)  inspect,}){
 final _that = this;
 switch (_that) {
 case _AttackAction():
@@ -94,8 +93,7 @@ return flee(_that);case _UseItemAction():
 return useItem(_that);case _TalkAction():
 return talk(_that);case _RestAction():
 return rest(_that);case _InspectAction():
-return inspect(_that);case _CustomAction():
-return custom(_that);}
+return inspect(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
 ///
@@ -109,7 +107,7 @@ return custom(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _AttackAction value)?  attack,TResult? Function( _DefendAction value)?  defend,TResult? Function( _FleeAction value)?  flee,TResult? Function( _UseItemAction value)?  useItem,TResult? Function( _TalkAction value)?  talk,TResult? Function( _RestAction value)?  rest,TResult? Function( _InspectAction value)?  inspect,TResult? Function( _CustomAction value)?  custom,}){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>({TResult? Function( _AttackAction value)?  attack,TResult? Function( _DefendAction value)?  defend,TResult? Function( _FleeAction value)?  flee,TResult? Function( _UseItemAction value)?  useItem,TResult? Function( _TalkAction value)?  talk,TResult? Function( _RestAction value)?  rest,TResult? Function( _InspectAction value)?  inspect,}){
 final _that = this;
 switch (_that) {
 case _AttackAction() when attack != null:
@@ -119,8 +117,7 @@ return flee(_that);case _UseItemAction() when useItem != null:
 return useItem(_that);case _TalkAction() when talk != null:
 return talk(_that);case _RestAction() when rest != null:
 return rest(_that);case _InspectAction() when inspect != null:
-return inspect(_that);case _CustomAction() when custom != null:
-return custom(_that);case _:
+return inspect(_that);case _:
   return null;
 
 }
@@ -137,7 +134,7 @@ return custom(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String targetName,  int? customDamage)?  attack,TResult Function()?  defend,TResult Function()?  flee,TResult Function( String itemName,  String? targetName)?  useItem,TResult Function( String npcName)?  talk,TResult Function()?  rest,TResult Function( String targetName)?  inspect,TResult Function( String name,  Map<String, dynamic> parameters)?  custom,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String targetName,  int? customDamage)?  attack,TResult Function()?  defend,TResult Function()?  flee,TResult Function( String itemName,  String? targetName)?  useItem,TResult Function( String npcName)?  talk,TResult Function()?  rest,TResult Function( String targetName)?  inspect,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AttackAction() when attack != null:
 return attack(_that.targetName,_that.customDamage);case _DefendAction() when defend != null:
@@ -146,8 +143,7 @@ return flee();case _UseItemAction() when useItem != null:
 return useItem(_that.itemName,_that.targetName);case _TalkAction() when talk != null:
 return talk(_that.npcName);case _RestAction() when rest != null:
 return rest();case _InspectAction() when inspect != null:
-return inspect(_that.targetName);case _CustomAction() when custom != null:
-return custom(_that.name,_that.parameters);case _:
+return inspect(_that.targetName);case _:
   return orElse();
 
 }
@@ -165,7 +161,7 @@ return custom(_that.name,_that.parameters);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String targetName,  int? customDamage)  attack,required TResult Function()  defend,required TResult Function()  flee,required TResult Function( String itemName,  String? targetName)  useItem,required TResult Function( String npcName)  talk,required TResult Function()  rest,required TResult Function( String targetName)  inspect,required TResult Function( String name,  Map<String, dynamic> parameters)  custom,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String targetName,  int? customDamage)  attack,required TResult Function()  defend,required TResult Function()  flee,required TResult Function( String itemName,  String? targetName)  useItem,required TResult Function( String npcName)  talk,required TResult Function()  rest,required TResult Function( String targetName)  inspect,}) {final _that = this;
 switch (_that) {
 case _AttackAction():
 return attack(_that.targetName,_that.customDamage);case _DefendAction():
@@ -174,8 +170,7 @@ return flee();case _UseItemAction():
 return useItem(_that.itemName,_that.targetName);case _TalkAction():
 return talk(_that.npcName);case _RestAction():
 return rest();case _InspectAction():
-return inspect(_that.targetName);case _CustomAction():
-return custom(_that.name,_that.parameters);}
+return inspect(_that.targetName);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -189,7 +184,7 @@ return custom(_that.name,_that.parameters);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String targetName,  int? customDamage)?  attack,TResult? Function()?  defend,TResult? Function()?  flee,TResult? Function( String itemName,  String? targetName)?  useItem,TResult? Function( String npcName)?  talk,TResult? Function()?  rest,TResult? Function( String targetName)?  inspect,TResult? Function( String name,  Map<String, dynamic> parameters)?  custom,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String targetName,  int? customDamage)?  attack,TResult? Function()?  defend,TResult? Function()?  flee,TResult? Function( String itemName,  String? targetName)?  useItem,TResult? Function( String npcName)?  talk,TResult? Function()?  rest,TResult? Function( String targetName)?  inspect,}) {final _that = this;
 switch (_that) {
 case _AttackAction() when attack != null:
 return attack(_that.targetName,_that.customDamage);case _DefendAction() when defend != null:
@@ -198,8 +193,7 @@ return flee();case _UseItemAction() when useItem != null:
 return useItem(_that.itemName,_that.targetName);case _TalkAction() when talk != null:
 return talk(_that.npcName);case _RestAction() when rest != null:
 return rest();case _InspectAction() when inspect != null:
-return inspect(_that.targetName);case _CustomAction() when custom != null:
-return custom(_that.name,_that.parameters);case _:
+return inspect(_that.targetName);case _:
   return null;
 
 }
@@ -565,80 +559,6 @@ class __$InspectActionCopyWithImpl<$Res>
   return _then(_InspectAction(
 targetName: null == targetName ? _self.targetName : targetName // ignore: cast_nullable_to_non_nullable
 as String,
-  ));
-}
-
-
-}
-
-/// @nodoc
-
-
-class _CustomAction extends Action {
-  const _CustomAction({required this.name, required final  Map<String, dynamic> parameters}): _parameters = parameters,super._();
-  
-
- final  String name;
- final  Map<String, dynamic> _parameters;
- Map<String, dynamic> get parameters {
-  if (_parameters is EqualUnmodifiableMapView) return _parameters;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableMapView(_parameters);
-}
-
-
-/// Create a copy of Action
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$CustomActionCopyWith<_CustomAction> get copyWith => __$CustomActionCopyWithImpl<_CustomAction>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CustomAction&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other._parameters, _parameters));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,name,const DeepCollectionEquality().hash(_parameters));
-
-@override
-String toString() {
-  return 'Action.custom(name: $name, parameters: $parameters)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$CustomActionCopyWith<$Res> implements $ActionCopyWith<$Res> {
-  factory _$CustomActionCopyWith(_CustomAction value, $Res Function(_CustomAction) _then) = __$CustomActionCopyWithImpl;
-@useResult
-$Res call({
- String name, Map<String, dynamic> parameters
-});
-
-
-
-
-}
-/// @nodoc
-class __$CustomActionCopyWithImpl<$Res>
-    implements _$CustomActionCopyWith<$Res> {
-  __$CustomActionCopyWithImpl(this._self, this._then);
-
-  final _CustomAction _self;
-  final $Res Function(_CustomAction) _then;
-
-/// Create a copy of Action
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? name = null,Object? parameters = null,}) {
-  return _then(_CustomAction(
-name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,parameters: null == parameters ? _self._parameters : parameters // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>,
   ));
 }
 

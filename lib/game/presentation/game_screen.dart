@@ -74,7 +74,7 @@ class _ActorDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return actor.when(
-      player: (name, health, maxHealth, exp, level) {
+      player: (name, health, maxHealth, exp, level, _, _, _) {
         final percentage = health / maxHealth;
         final barColor = percentage > 0.5
             ? Colors.green

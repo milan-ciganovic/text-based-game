@@ -1,5 +1,4 @@
 import 'package:untitled1/game/models/actor.dart';
-import 'package:untitled1/game/models/game_variables.dart';
 import 'package:untitled1/game/models/situation.dart';
 
 /// Input DTO for the ProcessActionUseCase
@@ -8,13 +7,11 @@ class GameRequest {
     required this.player,
     required this.actors,
     required this.currentSituation,
-    required this.variables,
     required this.turn,
   });
   final Actor player;
   final Map<String, Actor> actors;
   final Situation? currentSituation;
-  final GameVariables variables;
   final int turn;
 }
 
@@ -24,7 +21,6 @@ class GameResult {
     required this.player,
     required this.actors,
     required this.currentSituation,
-    required this.variables,
     required this.newTurn,
     required this.logs,
     required this.isGameOver,
@@ -33,7 +29,6 @@ class GameResult {
   final Actor player;
   final Map<String, Actor> actors;
   final Situation? currentSituation;
-  final GameVariables variables;
   final int newTurn;
   final List<String> logs;
   final bool isGameOver;

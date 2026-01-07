@@ -153,10 +153,10 @@ return npc(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String name,  int health,  int maxHealth,  int experience,  int level)?  player,TResult Function( String name,  int health,  int maxHealth,  int experience)?  monster,TResult Function( String name,  String description)?  npc,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String name,  int health,  int maxHealth,  int experience,  int level,  int gold,  bool isDefending,  String? currentLocation)?  player,TResult Function( String name,  int health,  int maxHealth,  int experience)?  monster,TResult Function( String name,  String description)?  npc,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlayerActor() when player != null:
-return player(_that.name,_that.health,_that.maxHealth,_that.experience,_that.level);case _MonsterActor() when monster != null:
+return player(_that.name,_that.health,_that.maxHealth,_that.experience,_that.level,_that.gold,_that.isDefending,_that.currentLocation);case _MonsterActor() when monster != null:
 return monster(_that.name,_that.health,_that.maxHealth,_that.experience);case _NPCActor() when npc != null:
 return npc(_that.name,_that.description);case _:
   return orElse();
@@ -176,10 +176,10 @@ return npc(_that.name,_that.description);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String name,  int health,  int maxHealth,  int experience,  int level)  player,required TResult Function( String name,  int health,  int maxHealth,  int experience)  monster,required TResult Function( String name,  String description)  npc,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String name,  int health,  int maxHealth,  int experience,  int level,  int gold,  bool isDefending,  String? currentLocation)  player,required TResult Function( String name,  int health,  int maxHealth,  int experience)  monster,required TResult Function( String name,  String description)  npc,}) {final _that = this;
 switch (_that) {
 case _PlayerActor():
-return player(_that.name,_that.health,_that.maxHealth,_that.experience,_that.level);case _MonsterActor():
+return player(_that.name,_that.health,_that.maxHealth,_that.experience,_that.level,_that.gold,_that.isDefending,_that.currentLocation);case _MonsterActor():
 return monster(_that.name,_that.health,_that.maxHealth,_that.experience);case _NPCActor():
 return npc(_that.name,_that.description);}
 }
@@ -195,10 +195,10 @@ return npc(_that.name,_that.description);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String name,  int health,  int maxHealth,  int experience,  int level)?  player,TResult? Function( String name,  int health,  int maxHealth,  int experience)?  monster,TResult? Function( String name,  String description)?  npc,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String name,  int health,  int maxHealth,  int experience,  int level,  int gold,  bool isDefending,  String? currentLocation)?  player,TResult? Function( String name,  int health,  int maxHealth,  int experience)?  monster,TResult? Function( String name,  String description)?  npc,}) {final _that = this;
 switch (_that) {
 case _PlayerActor() when player != null:
-return player(_that.name,_that.health,_that.maxHealth,_that.experience,_that.level);case _MonsterActor() when monster != null:
+return player(_that.name,_that.health,_that.maxHealth,_that.experience,_that.level,_that.gold,_that.isDefending,_that.currentLocation);case _MonsterActor() when monster != null:
 return monster(_that.name,_that.health,_that.maxHealth,_that.experience);case _NPCActor() when npc != null:
 return npc(_that.name,_that.description);case _:
   return null;
@@ -212,7 +212,7 @@ return npc(_that.name,_that.description);case _:
 
 
 class _PlayerActor extends Actor {
-  const _PlayerActor({required this.name, required this.health, required this.maxHealth, this.experience = 0, this.level = 1}): super._();
+  const _PlayerActor({required this.name, required this.health, required this.maxHealth, this.experience = 0, this.level = 1, this.gold = 0, this.isDefending = false, this.currentLocation}): super._();
   
 
 @override final  String name;
@@ -220,6 +220,9 @@ class _PlayerActor extends Actor {
  final  int maxHealth;
 @JsonKey() final  int experience;
 @JsonKey() final  int level;
+@JsonKey() final  int gold;
+@JsonKey() final  bool isDefending;
+ final  String? currentLocation;
 
 /// Create a copy of Actor
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +234,16 @@ _$PlayerActorCopyWith<_PlayerActor> get copyWith => __$PlayerActorCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlayerActor&&(identical(other.name, name) || other.name == name)&&(identical(other.health, health) || other.health == health)&&(identical(other.maxHealth, maxHealth) || other.maxHealth == maxHealth)&&(identical(other.experience, experience) || other.experience == experience)&&(identical(other.level, level) || other.level == level));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlayerActor&&(identical(other.name, name) || other.name == name)&&(identical(other.health, health) || other.health == health)&&(identical(other.maxHealth, maxHealth) || other.maxHealth == maxHealth)&&(identical(other.experience, experience) || other.experience == experience)&&(identical(other.level, level) || other.level == level)&&(identical(other.gold, gold) || other.gold == gold)&&(identical(other.isDefending, isDefending) || other.isDefending == isDefending)&&(identical(other.currentLocation, currentLocation) || other.currentLocation == currentLocation));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,name,health,maxHealth,experience,level);
+int get hashCode => Object.hash(runtimeType,name,health,maxHealth,experience,level,gold,isDefending,currentLocation);
 
 @override
 String toString() {
-  return 'Actor.player(name: $name, health: $health, maxHealth: $maxHealth, experience: $experience, level: $level)';
+  return 'Actor.player(name: $name, health: $health, maxHealth: $maxHealth, experience: $experience, level: $level, gold: $gold, isDefending: $isDefending, currentLocation: $currentLocation)';
 }
 
 
@@ -251,7 +254,7 @@ abstract mixin class _$PlayerActorCopyWith<$Res> implements $ActorCopyWith<$Res>
   factory _$PlayerActorCopyWith(_PlayerActor value, $Res Function(_PlayerActor) _then) = __$PlayerActorCopyWithImpl;
 @override @useResult
 $Res call({
- String name, int health, int maxHealth, int experience, int level
+ String name, int health, int maxHealth, int experience, int level, int gold, bool isDefending, String? currentLocation
 });
 
 
@@ -268,14 +271,17 @@ class __$PlayerActorCopyWithImpl<$Res>
 
 /// Create a copy of Actor
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? health = null,Object? maxHealth = null,Object? experience = null,Object? level = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? health = null,Object? maxHealth = null,Object? experience = null,Object? level = null,Object? gold = null,Object? isDefending = null,Object? currentLocation = freezed,}) {
   return _then(_PlayerActor(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,health: null == health ? _self.health : health // ignore: cast_nullable_to_non_nullable
 as int,maxHealth: null == maxHealth ? _self.maxHealth : maxHealth // ignore: cast_nullable_to_non_nullable
 as int,experience: null == experience ? _self.experience : experience // ignore: cast_nullable_to_non_nullable
 as int,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
-as int,
+as int,gold: null == gold ? _self.gold : gold // ignore: cast_nullable_to_non_nullable
+as int,isDefending: null == isDefending ? _self.isDefending : isDefending // ignore: cast_nullable_to_non_nullable
+as bool,currentLocation: freezed == currentLocation ? _self.currentLocation : currentLocation // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

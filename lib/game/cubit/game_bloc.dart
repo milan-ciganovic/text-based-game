@@ -60,7 +60,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         player: state.worldState.player,
         actors: state.worldState.actors,
         currentSituation: state.worldState.currentSituation,
-        variables: state.worldState.variables,
         turn: state.worldState.turn,
       );
 
@@ -76,7 +75,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         player: result.player,
         actors: result.actors,
         currentSituation: result.currentSituation,
-        variables: result.variables,
         turn: result.newTurn,
         log: mergedLogs,
         isGameOver: result.isGameOver,

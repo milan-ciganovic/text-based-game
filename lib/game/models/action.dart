@@ -29,11 +29,6 @@ sealed class Action with _$Action {
     required String targetName,
   }) = _InspectAction;
 
-  const factory Action.custom({
-    required String name,
-    required Map<String, dynamic> parameters,
-  }) = _CustomAction;
-
   const Action._();
 
   /// Get the action name
@@ -45,6 +40,5 @@ sealed class Action with _$Action {
     talk: (npcName) => 'Talk to $npcName',
     rest: () => 'Rest',
     inspect: (targetName) => 'Inspect $targetName',
-    custom: (name, _) => name,
   );
 }
