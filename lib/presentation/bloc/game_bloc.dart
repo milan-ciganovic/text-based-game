@@ -75,6 +75,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
         GameState(
           worldState: newWorld,
           availableActions: availableActions,
+          // ignore: avoid_redundant_argument_values
           isLoading: false,
         ),
       );

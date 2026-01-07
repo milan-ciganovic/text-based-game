@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled1/presentation/bloc/game_bloc.dart';
 
@@ -25,7 +26,9 @@ class GameBlocObserver extends BlocObserver {
             // Prefer using a tag so it's easy to filter in console.
             // Actual persistence or more advanced logging can be
             // implemented elsewhere (e.g. a logging package).
-            print('[GameLog] $entry');
+            if (kDebugMode) {
+              print('[GameLog] $entry');
+            }
           }
         }
       }

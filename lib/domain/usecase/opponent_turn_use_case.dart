@@ -33,6 +33,7 @@ class OpponentTurnUseCase {
             experience: exp,
             level: level,
             gold: gold,
+            // ignore: avoid_redundant_argument_values
             isDefending: false, // Reset defending after being attacked
             currentLocation: currentLocation,
           ),
