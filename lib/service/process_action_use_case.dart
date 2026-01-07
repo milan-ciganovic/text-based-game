@@ -41,7 +41,7 @@ class ProcessActionUseCase {
     await action.when(
       attack: (_, _) => _attack(action, engineState),
       defend: () => _defend(action, engineState),
-      flee: () => _flee(action, engineState),
+      flee: () => _flee(engineState),
       useItem: (itemName, _) => _handleUseItem(engineState, itemName),
       talk: (npcName) async => _handleTalk(engineState, npcName),
       rest: () => _rest(action, engineState),
