@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:untitled1/game/cubit/game_cubit.dart';
-import 'package:untitled1/game/cubit/game_state.dart';
+import 'package:untitled1/game/cubit/game_bloc.dart';
 import 'package:untitled1/game/models/actor.dart';
 import 'package:untitled1/game/models/world_state.dart';
 
@@ -12,7 +11,7 @@ class GameScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Text RPG')),
-      body: BlocBuilder<GameCubit, GameState>(
+      body: BlocBuilder<GameBloc, GameState>(
         builder: (context, state) {
           final worldState = state.worldState;
           return Column(
@@ -211,7 +210,7 @@ class _ActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<GameCubit>();
+    final cubit = context.read<GameBloc>();
     final worldState = state.worldState;
     final isLoading = state.isLoading;
 
@@ -230,7 +229,7 @@ class _ActionBar extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               ElevatedButton(
-                onPressed: cubit.startGame,
+                onPressed: () => cubit.add(const GameEvent.startGame()),
                 child: const Text('Restart Game'),
               ),
             ],
@@ -248,19 +247,27 @@ class _ActionBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ElevatedButton(
-                onPressed: isLoading ? null : cubit.attack,
+                onPressed: isLoading
+                    ? null
+                    : () => cubit.add(const GameEvent.attack()),
                 child: const Text('Attack'),
               ),
               ElevatedButton(
-                onPressed: isLoading ? null : cubit.defend,
+                onPressed: isLoading
+                    ? null
+                    : () => cubit.add(const GameEvent.defend()),
                 child: const Text('Defend'),
               ),
               ElevatedButton(
-                onPressed: isLoading ? null : cubit.flee,
+                onPressed: isLoading
+                    ? null
+                    : () => cubit.add(const GameEvent.flee()),
                 child: const Text('Flee'),
               ),
               ElevatedButton(
-                onPressed: isLoading ? null : cubit.inspectOpponent,
+                onPressed: isLoading
+                    ? null
+                    : () => cubit.add(const GameEvent.inspectOpponent()),
                 child: const Text('Inspect'),
               ),
             ],
@@ -275,11 +282,15 @@ class _ActionBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton(
-            onPressed: isLoading ? null : cubit.rest,
+            onPressed: isLoading
+                ? null
+                : () => cubit.add(const GameEvent.rest()),
             child: const Text('Rest'),
           ),
           ElevatedButton(
-            onPressed: isLoading ? null : cubit.spawnMonster,
+            onPressed: isLoading
+                ? null
+                : () => cubit.add(const GameEvent.spawnMonster()),
             child: const Text('Search for Battle'),
           ),
         ],

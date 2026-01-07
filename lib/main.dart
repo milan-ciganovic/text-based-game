@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:untitled1/di/di_init.dart';
-import 'package:untitled1/game/cubit/game_cubit.dart';
+import 'package:untitled1/game/cubit/game_bloc.dart';
 import 'package:untitled1/game/presentation/game_screen.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class TextRPGApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => diContainer<GameCubit>()..startGame(),
+      create: (_) => diContainer<GameBloc>()..add(const GameEvent.startGame()),
       child: MaterialApp(
         title: 'Text RPG',
         theme: ThemeData.dark(),

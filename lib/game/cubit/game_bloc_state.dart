@@ -1,7 +1,4 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:untitled1/game/models/world_state.dart';
-
-part 'game_state.freezed.dart';
+part of 'game_bloc.dart';
 
 /// UI State for the game - wraps WorldState for BLoC
 @freezed
